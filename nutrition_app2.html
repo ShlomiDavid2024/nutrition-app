@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Info App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, select, button, input {
+            display: block;
+            margin: 10px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nutrition Info App</h1>
+    <label for="item">Choose an item:</label>
+    <select id="item">
+        <option value="">-- Select an item --</option>
+    </select>
+
+    <div id="inputSection" class="hidden">
+        <label for="amount">Enter amount (ml):</label>
+        <input type="number" id="amount" placeholder="Enter amount in ml" min="1">
+        <button id="showInfo">Show Nutrition Info</button>
+    </div>
+
+    <div id="info" class="info" style="display: none;">
+        <h2>Nutrition Information</h2>
+        <p><strong>Calories:</strong> <span id="calories">0</span> kcal</p>
+        <p><strong>Protein:</strong> <span id="protein">0</span> g</p>
+        <p><strong>Water:</strong> <span id="water">0</span> ml</p>
+    </div>
+
+    <script>
+        // Example data, replace or extend with your own data.
+        const nutritionData = {
+            "Osmolite": { calories: 100, protein: 4, water: 83.5 },
+            "Jevity": { calories: 106, protein: 4.4, water: 83.5 }
+        };
+
+        // Populate the dropdown menu
+        const itemSelect = document.getElementById('item');
+        for (const item in nutritionData) {
+            const option = document.createElement('option');
+            option.value = item;
+            option.textContent = item;
+            itemSelect.appendChild(option);
+        }
+
+        // Show input section when an item is selected
+        itemSelect.addEventListener('change', () => {
+            const inputSection = document.getElementById('inputSection');
+            if (itemSelect.value) {
+                inputSection.classList.remove('hidden');
+            } else {
+                inputSection.classList.add('hidden');
+                document.getElementById('info').style.display = 'none';
+            }
+        });
+
+        // Display nutrition information
+        document.getElementById('showInfo').addEventListener('click', () => {
+            const selectedItem = itemSelect.value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const infoDiv = document.getElementById('info');
+
+            if (selectedItem && nutritionData[selectedItem] && amount > 0) {
+                const { calories, protein, water } = nutritionData[selectedItem];
+                document.getElementById('calories').textContent = ((calories / 100) * amount).toFixed(2);
+                document.getElementById('protein').textContent = ((protein / 100) * amount).toFixed(2);
+                document.getElementById('water').textContent = ((water / 100) * amount).toFixed(2);
+                infoDiv.style.display = 'block';
+            } else {
+                infoDiv.style.display = 'none';
+                alert('Please enter a valid amount.');
+            }
+        });
+    </script>
+</body>
+</html>
